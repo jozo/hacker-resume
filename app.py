@@ -65,15 +65,16 @@ def home():
 
 @app.route('/resume')
 def resume():
-    # if session.get('stackexchange_code', None):
-    #     se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
-    #                                                            'redirect_uri': redirect_uri})
-    #     about_me = se_session.get('https://api.stackexchange.com/me/tags',
-    #                               params={'format': 'json', 'site': 'stackoverflow',
-    #                                       'access_token': se_session.access_token,
-    #                                       'key': conf.STACKEXCHANGE_KEY}).json()
-    #
-    #     print(about_me)
+    if session.get('stackexchange_code', None):
+        se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
+                                                               'redirect_uri': redirect_uri,
+                                                               'expires': 1000})
+        about_me = se_session.get('https://api.stackexchange.com/me/tags',
+                                  params={'format': 'json', 'site': 'stackoverflow',
+                                          'access_token': se_session.access_token,
+                                          'key': conf.STACKEXCHANGE_KEY}).json()
+
+        print(about_me)
     parse_github()
     data = {'wakatime': try_get_wakatime_data()}
     return render_template('resume.html', **data)
