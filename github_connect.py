@@ -68,6 +68,7 @@ def after_request(response):
 def index():
     if g.user:
         t = 'Hello! <a href="{{ url_for("user") }}">Get user</a> ' \
+            '<a href="{{ url_for("repo") }}">Get user repos</a>' \
             '<a href="{{ url_for("logout") }}">Logout</a>'
     else:
         t = 'Hello! <a href="{{ url_for("login") }}">Login</a>'
@@ -94,6 +95,9 @@ def authorized(access_token):
         user = User(access_token)
         db_session.add(user)
     user.github_access_token = access_token
+
+
+
     db_session.commit()
 
     session['user_id'] = user.id
@@ -120,7 +124,8 @@ def user():
 
 @app.route('/repo')
 def repo():
-    repo_dict = github.get('repos/cenkalti/github-flask')
+    info_dict = github.get('user')
+    repo_dict = github.get('users/%s/repos' % info_dict['login'])
     return str(repo_dict)
 
 
