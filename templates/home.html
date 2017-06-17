@@ -2,10 +2,11 @@
 {%block content %}
     <h2>Home</h2>
 
-    <a class="btn btn-primary" href="/start-wakatime" role="button">Connect Wakatime</a>
-    {% if wakatime_data %}
+    {% if wakatime %}
         <p>
-        <b>Wakatime: </b> {{ wakatime_data }}
+        <b>Wakatime: </b> {{ wakatime }}
         </p>
+    {% else %}
+        <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect Wakatime</a>
     {% endif %}
 {%endblock%}

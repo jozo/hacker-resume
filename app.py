@@ -4,27 +4,34 @@ import conf
 
 
 app = Flask(__name__)
-app.secret_key = conf.flask_secret_key
+app.secret_key = conf.FLASK_SECRET_KEY
+
+
+def try_get_wakatime_data():
+    import pdb ; pdb.set_trace()
+    if session.get('wakatime_code', None):
+        print('**** SESSION CODE: {}'.format(session['wakatime_code']))
+        wt_session = wakatime.get_session(session['wakatime_code'])
+        stats = wt_session.get('users/current/stats/last_year').json()
+        return str(stats.get('data', {}).get('human_readable_total', 'Calculating...'))
+    return None
 
 
 @app.route('/')
 def home():
-    data = {}
-    if session.get('wakatime_code', None):
-        wt_session = wakatime.get_session(session['wakatime_code'])
-        stats = wt_session.get('users/current/stats/last_year').json()
-        data['wakatime_data'] = str(stats.get('data', {}).get('human_readable_total', 'Calculating...'))
+    data = {'wakatime': try_get_wakatime_data()}
     return render_template('home.html', **data)
 
 
-@app.route('/oauth-wakatime')
-def oauth_wakatime():
+@app.route('/wakatime-oauth-end')
+def wakatime_oauth_end():
+    print('**** CODE: {}'.format(request.args.get('code')))
     session['wakatime_code'] = request.args.get('code')
     return redirect('/')
 
 
-@app.route('/start-wakatime')
-def start_wakatime():
+@app.route('/wakatime-oauth-start')
+def wakatime_oauth_start():
     url = wakatime.get_authorize_url()
     return redirect(url)
 

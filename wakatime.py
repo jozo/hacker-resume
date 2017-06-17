@@ -1,18 +1,18 @@
 import hashlib
 import os
 from rauth import OAuth2Service
-from conf import wakatime_app_id, wakatime_app_secret
+from conf import WAKATIME_APP_ID, WAKATIME_APP_SECRET
 
 
 wakatime_service = OAuth2Service(
-    client_id=wakatime_app_id,  # your App ID from https://wakatime.com/apps
-    client_secret=wakatime_app_secret,  # your App Secret from https://wakatime.com/apps
+    client_id=WAKATIME_APP_ID,  # your App ID from https://wakatime.com/apps
+    client_secret=WAKATIME_APP_SECRET,  # your App Secret from https://wakatime.com/apps
     name='wakatime',
     authorize_url='https://wakatime.com/oauth/authorize',
     access_token_url='https://wakatime.com/oauth/token',
     base_url='https://wakatime.com/api/v1/')
 
-redirect_uri = 'http://localhost:5000/oauth-wakatime'
+redirect_uri = 'http://localhost:5000/wakatime-oauth-end'
 
 
 def get_authorize_url():
