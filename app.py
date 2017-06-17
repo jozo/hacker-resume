@@ -50,9 +50,8 @@ def parse_github():
         github_session = github.get_auth_session(data={'code': session['github_code']})
         about_me = github_session.get('https://api.github.com/user',
                                       params={'access_token': github_session.access_token}).json()
-        print("Github:", about_me)
-        # user = about_me['login']
-        user = 'fadawar'
+        # print("Github:", about_me)
+        user = about_me['login']
         repos = github_session.get('https://api.github.com/users/%s/repos' % user,
                                       params={'access_token': github_session.access_token}).json()
         all_langs = {}
@@ -63,8 +62,7 @@ def parse_github():
 
             all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
 
-        print(all_langs)
-    return None
+    return all_langs
 
 def generate_github():
     pass
@@ -92,7 +90,7 @@ def resume():
     #
     #     print(about_me)
     # parse_github()
-    data = {'wakatime': try_get_wakatime_data()}
+    data = {'wakatime': try_get_wakatime_data(), 'GitHub': parse_github()}
     return render_template('resume.html', **data)
 
 
