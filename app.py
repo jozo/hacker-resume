@@ -51,8 +51,23 @@ def parse_github():
         about_me = github_session.get('https://api.github.com/user',
                                       params={'access_token': github_session.access_token}).json()
         print("Github:", about_me)
+        # user = about_me['login']
+        user = 'fadawar'
+        repos = github_session.get('https://api.github.com/users/%s/repos' % user,
+                                      params={'access_token': github_session.access_token}).json()
+        all_langs = {}
+        for repo in repos:
+            name = repo['name']
+            repo_langs = github_session.get('https://api.github.com/repos/%s/%s/languages' % (user,name),
+                                       params={'access_token': github_session.access_token}).json()
+
+            all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
+
+        print(all_langs)
     return None
 
+def generate_github():
+    pass
 
 @app.route('/')
 def home():
