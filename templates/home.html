@@ -1,12 +1,41 @@
 {%extends 'base.html' %}
 {%block content %}
-    <h2>Home</h2>
+    <div class="home">
+        <h2>Connect to third-parties before generating resume</h2>
 
-    {% if wakatime %}
-        <p>
-        <b>Wakatime: </b> {{ wakatime }}
-        </p>
-    {% else %}
-        <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect Wakatime</a>
-    {% endif %}
+        <table class="connections" align="center">
+            <tr>
+                <td>WakaTime</td>
+                <td>:</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                </td>
+            </tr>
+            <tr>
+                <td>StackExchange</td>
+                <td>:</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Github</td>
+                <td>:</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                </td>
+            </tr>
+        </table>
+
+        <a class="btn btn-lg btn-success" href="{{ url_for('wakatime_oauth_start') }}" role="button">Generate resume</a>
+
+{#        {% if wakatime %}#}
+{#            <p>#}
+{#            <b>Wakatime: </b> {{ wakatime }}#}
+{#            </p>#}
+{#        {% else %}#}
+{#            <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect Wakatime</a>#}
+{#        {% endif %}#}
+    </div>
+
 {%endblock%}

@@ -1,0 +1,22 @@
+nav {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.home {
+    text-align: center;
+}
+
+.connections {
+    margin-bottom: 40px;
+}
+
+.connections td {
+    padding: 10px;
+}
+
+.connections td:first-child {
+    /*font-weight: bold;*/
+    text-align: right;
+    font-size: 20px;
+}
