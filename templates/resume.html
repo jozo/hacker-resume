@@ -1,15 +1,40 @@
-{%extends 'base.html' %}
-{%block content %}
+{% extends 'base.html' %}
+{% block content %}
     <div class="home">
         <h2>Hacker resume</h2>
 
-
         {% if wakatime %}
-            <p>
-            <b>Wakatime: </b> {{ wakatime }}
-            </p>
-        {% endif %}
+            <div>
+            <h3>Wakatime (last year)</h3>
+                <div>
+                    <b>Most used languages: </b>
 
+                    <span class="badge badge-primary">
+                        {{ wakatime['data']['languages'][0]['name'] }}
+                        [{{ wakatime['data']['languages'][0]['text'] }}]
+                    </span>
+                    <span class="badge badge-success">
+                        {{ wakatime['data']['languages'][1]['name'] }}
+                        [{{ wakatime['data']['languages'][1]['text'] }}]
+                    </span>
+                </div>
+                <div>
+                    <b>Editor of choice: </b>
+
+                    <span class="badge badge-primary">
+                        {{ wakatime['data']['editors'][0]['name'] }}
+                    </span>
+                </div>
+                <div>
+                    <b>Total time programming: </b>
+
+                    <span class="badge badge-primary">
+                        {{ wakatime['data']['human_readable_total'] }}
+                    </span>
+                </div>
+
+            </div>
+        {% endif %}
     </div>
 
-{%endblock%}
+{% endblock %}

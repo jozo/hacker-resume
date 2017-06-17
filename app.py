@@ -38,7 +38,8 @@ def try_get_wakatime_data():
             print('**** SESSION CODE: {}'.format(session['wakatime_code']))
             wt_session = wakatime.get_session(session['wakatime_code'])
             stats = wt_session.get('users/current/stats/last_year').json()
-            return str(stats.get('data', {}).get('human_readable_total', 'Calculating...'))
+            session.pop('wakatime_code')
+            return stats
     except Exception:
         pass
     return None
@@ -65,17 +66,17 @@ def home():
 
 @app.route('/resume')
 def resume():
-    if session.get('stackexchange_code', None):
-        se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
-                                                               'redirect_uri': redirect_uri,
-                                                               'expires': 1000})
-        about_me = se_session.get('https://api.stackexchange.com/me/tags',
-                                  params={'format': 'json', 'site': 'stackoverflow',
-                                          'access_token': se_session.access_token,
-                                          'key': conf.STACKEXCHANGE_KEY}).json()
-
-        print(about_me)
-    parse_github()
+    # if session.get('stackexchange_code', None):
+    #     se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
+    #                                                            'redirect_uri': redirect_uri,
+    #                                                            'expires': 1000})
+    #     about_me = se_session.get('https://api.stackexchange.com/me/tags',
+    #                               params={'format': 'json', 'site': 'stackoverflow',
+    #                                       'access_token': se_session.access_token,
+    #                                       'key': conf.STACKEXCHANGE_KEY}).json()
+    #
+    #     print(about_me)
+    # parse_github()
     data = {'wakatime': try_get_wakatime_data()}
     return render_template('resume.html', **data)
 
