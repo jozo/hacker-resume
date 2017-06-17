@@ -15,6 +15,13 @@ stackexchange_auth = OAuth2Service(
     access_token_url='https://stackexchange.com/oauth/access_token',
     base_url='https://stackexchange.com')
 
+github = OAuth2Service(
+    name='github',
+    client_id= conf.GITHUB_CLIENT_ID,
+    client_secret= conf.GITHUB_CLIENT_SECRET,
+    access_token_url='https://github.com/login/oauth/access_token',
+    authorize_url='https://github.com/login/oauth/authorize')
+
 redirect_uri = 'http://localhost:5000/oauth-stackexchange'
 params = {'client_id': conf.STACKEXCHANGE_CLIENT_ID,
           'response_type': 'code',
@@ -33,6 +40,14 @@ def try_get_wakatime_data():
     return None
 
 
+def parse_github():
+    if session.get('github_code', None):
+        github_session = github.get_auth_session(data={'code': session['github_code']})
+        about_me = github_session.get('https://api.github.com/user',
+                                      params={'access_token': github_session.access_token}).json()
+        print("Github:", about_me)
+    return None
+
 @app.route('/')
 def home():
     if session.get('stackexchange_code', None):
@@ -45,6 +60,7 @@ def home():
 
         print(about_me)
     data = {'wakatime': try_get_wakatime_data()}
+    parse_github()
     return render_template('home.html', **data)
 
 
@@ -66,10 +82,19 @@ def oauth_stacexchange():
     session['stackexchange_code'] = request.args.get('code')
     return redirect('/')
 
+@app.route('/oauth-github')
+def oauth_github():
+    session['github_code'] = request.args.get('code')
+    return redirect('/')
 
 @app.route('/start-stackexchange')
 def start_stackexchange():
     url = stackexchange_auth.get_authorize_url(**params)
+    return redirect(url)
+
+@app.route('/start-github')
+def start_github():
+    url = github.get_authorize_url()
     return redirect(url)
 
 
