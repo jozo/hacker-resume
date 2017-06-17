@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, session
 from rauth import OAuth2Service
 import wakatime
 import conf
+import mock
+
 
 app = Flask(__name__)
 app.secret_key = conf.FLASK_SECRET_KEY
@@ -22,6 +24,8 @@ params = {'client_id': conf.STACKEXCHANGE_CLIENT_ID,
 
 
 def try_get_wakatime_data():
+    if conf.WAKATIME_MOCK:
+        return mock.WAKATIME_STATS
     try:
         if session.get('wakatime_code', None):
             print('**** SESSION CODE: {}'.format(session['wakatime_code']))
@@ -35,15 +39,15 @@ def try_get_wakatime_data():
 
 @app.route('/')
 def home():
-    if session.get('stackexchange_code', None):
-        se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
-                                                               'redirect_uri': redirect_uri})
-        about_me = se_session.get('https://api.stackexchange.com/me/tags',
-                                  params={'format': 'json', 'site': 'stackoverflow',
-                                          'access_token': se_session.access_token,
-                                          'key': conf.STACKEXCHANGE_KEY}).json()
-
-        print(about_me)
+    # if session.get('stackexchange_code', None):
+    #     se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
+    #                                                            'redirect_uri': redirect_uri})
+    #     about_me = se_session.get('https://api.stackexchange.com/me/tags',
+    #                               params={'format': 'json', 'site': 'stackoverflow',
+    #                                       'access_token': se_session.access_token,
+    #                                       'key': conf.STACKEXCHANGE_KEY}).json()
+    #
+    #     print(about_me)
     data = {'wakatime': try_get_wakatime_data()}
     return render_template('home.html', **data)
 
