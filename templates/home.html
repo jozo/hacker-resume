@@ -8,21 +8,33 @@
                 <td>WakaTime</td>
                 <td>:</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                    {% if connected_wakatime %}
+                        <a class="btn btn-secondary disabled" role="button">✔ Done</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>StackExchange</td>
                 <td>:</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ url_for('start_stackexchange') }}" role="button">Connect</a>
+                    {% if connected_stackexchange %}
+                        <a class="btn btn-secondary disabled" role="button">✔ Done</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ url_for('start_stackexchange') }}" role="button">Connect</a>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>Github</td>
                 <td>:</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ url_for('start_github') }}" role="button">Connect</a>
+                    {% if connected_github %}
+                        <a class="btn btn-secondary disabled" role="button">✔ Done</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ url_for('start_github') }}" role="button">Connect</a>
+                    {% endif %}
                 </td>
             </tr>
         </table>

@@ -55,7 +55,12 @@ def parse_github():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    data = {
+        'connected_wakatime': session.get('wakatime_code', False),
+        'connected_stackexchange': session.get('stackexchange_code', False),
+        'connected_github': session.get('github_code', False),
+    }
+    return render_template('home.html', **data)
 
 
 @app.route('/resume')
@@ -72,6 +77,11 @@ def resume():
     parse_github()
     data = {'wakatime': try_get_wakatime_data()}
     return render_template('resume.html', **data)
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 
 @app.route('/wakatime-oauth-start')
