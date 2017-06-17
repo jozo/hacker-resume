@@ -7,21 +7,11 @@ app = Flask(__name__)
 app.secret_key = conf.FLASK_SECRET_KEY
 
 
-def try_get_wakatime_data():
-    import pdb ; pdb.set_trace()
-    if session.get('wakatime_code', None):
-        print('**** SESSION CODE: {}'.format(session['wakatime_code']))
-        wt_session = wakatime.get_session(session['wakatime_code'])
-        stats = wt_session.get('users/current/stats/last_year').json()
-        return str(stats.get('data', {}).get('human_readable_total', 'Calculating...'))
-    return None
-
-
 stackexchange_auth = OAuth2Service(
-    client_id= conf.STACKEXCHANGE_CLIENT_ID,
-    client_secret= conf.STACKEXCHANGE_CLIENT_SECRET,
+    client_id=conf.STACKEXCHANGE_CLIENT_ID,
+    client_secret=conf.STACKEXCHANGE_CLIENT_SECRET,
     name='stackexchange',
-    authorize_url= 'https://stackexchange.com/oauth',
+    authorize_url='https://stackexchange.com/oauth',
     access_token_url='https://stackexchange.com/oauth/access_token',
     base_url='https://stackexchange.com')
 
@@ -30,17 +20,30 @@ params = {'client_id': conf.STACKEXCHANGE_CLIENT_ID,
           'response_type': 'code',
           'redirect_uri': redirect_uri}
 
+
+def try_get_wakatime_data():
+    try:
+        if session.get('wakatime_code', None):
+            print('**** SESSION CODE: {}'.format(session['wakatime_code']))
+            wt_session = wakatime.get_session(session['wakatime_code'])
+            stats = wt_session.get('users/current/stats/last_year').json()
+            return str(stats.get('data', {}).get('human_readable_total', 'Calculating...'))
+    except Exception:
+        pass
+    return None
+
+
 @app.route('/')
 def home():
     if session.get('stackexchange_code', None):
-        se_session = stackexchange_auth.get_auth_session(data= {'code': session['stackexchange_code'],
-                                                                'redirect_uri': redirect_uri})
+        se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
+                                                               'redirect_uri': redirect_uri})
         about_me = se_session.get('https://api.stackexchange.com/me/tags',
-                       params={'format': 'json', 'site': 'stackoverflow',
-                               'access_token': se_session.access_token, 'key': conf.STACKEXCHANGE_KEY}).json()
+                                  params={'format': 'json', 'site': 'stackoverflow',
+                                          'access_token': se_session.access_token,
+                                          'key': conf.STACKEXCHANGE_KEY}).json()
 
         print(about_me)
-    return render_template('home.html')
     data = {'wakatime': try_get_wakatime_data()}
     return render_template('home.html', **data)
 
@@ -58,14 +61,14 @@ def wakatime_oauth_start():
     return redirect(url)
 
 
-
 @app.route('/oauth-stackexchange')
 def oauth_stacexchange():
     session['stackexchange_code'] = request.args.get('code')
     return redirect('/')
 
+
 @app.route('/start-stackexchange')
-def start_wakatime():
+def start_stackexchange():
     url = stackexchange_auth.get_authorize_url(**params)
     return redirect(url)
 
