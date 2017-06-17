@@ -1,4 +1,11 @@
 {%extends 'base.html' %}
 {%block content %}
     <h2>Home</h2>
+
+    <a class="btn btn-primary" href="/start-wakatime" role="button">Connect Wakatime</a>
+    {% if wakatime_data %}
+        <p>
+        <b>Wakatime: </b> {{ wakatime_data }}
+        </p>
+    {% endif %}
 {%endblock%}
