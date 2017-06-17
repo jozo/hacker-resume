@@ -15,27 +15,19 @@
                 <td>StackExchange</td>
                 <td>:</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                    <a class="btn btn-primary" href="{{ url_for('start_stackexchange') }}" role="button">Connect</a>
                 </td>
             </tr>
             <tr>
                 <td>Github</td>
                 <td>:</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect</a>
+                    <a class="btn btn-primary" href="{{ url_for('start_github') }}" role="button">Connect</a>
                 </td>
             </tr>
         </table>
 
-        <a class="btn btn-lg btn-success" href="{{ url_for('wakatime_oauth_start') }}" role="button">Generate resume</a>
-
-{#        {% if wakatime %}#}
-{#            <p>#}
-{#            <b>Wakatime: </b> {{ wakatime }}#}
-{#            </p>#}
-{#        {% else %}#}
-{#            <a class="btn btn-primary" href="{{ url_for('wakatime_oauth_start') }}" role="button">Connect Wakatime</a>#}
-{#        {% endif %}#}
+        <a class="btn btn-lg btn-success" href="{{ url_for('resume') }}" role="button">Generate resume</a>
     </div>
 
 {%endblock%}

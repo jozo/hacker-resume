@@ -1,0 +1,15 @@
+{%extends 'base.html' %}
+{%block content %}
+    <div class="home">
+        <h2>Hacker resume</h2>
+
+
+        {% if wakatime %}
+            <p>
+            <b>Wakatime: </b> {{ wakatime }}
+            </p>
+        {% endif %}
+
+    </div>
+
+{%endblock%}

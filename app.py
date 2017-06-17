@@ -17,17 +17,17 @@ stackexchange_auth = OAuth2Service(
     access_token_url='https://stackexchange.com/oauth/access_token',
     base_url='https://stackexchange.com')
 
-github = OAuth2Service(
-    name='github',
-    client_id= conf.GITHUB_CLIENT_ID,
-    client_secret= conf.GITHUB_CLIENT_SECRET,
-    access_token_url='https://github.com/login/oauth/access_token',
-    authorize_url='https://github.com/login/oauth/authorize')
-
 redirect_uri = 'http://localhost:5000/oauth-stackexchange'
 params = {'client_id': conf.STACKEXCHANGE_CLIENT_ID,
           'response_type': 'code',
           'redirect_uri': redirect_uri}
+
+github = OAuth2Service(
+    name='github',
+    client_id=conf.GITHUB_CLIENT_ID,
+    client_secret=conf.GITHUB_CLIENT_SECRET,
+    access_token_url='https://github.com/login/oauth/access_token',
+    authorize_url='https://github.com/login/oauth/authorize')
 
 
 def try_get_wakatime_data():
@@ -52,8 +52,14 @@ def parse_github():
         print("Github:", about_me)
     return None
 
+
 @app.route('/')
 def home():
+    return render_template('home.html')
+
+
+@app.route('/resume')
+def resume():
     # if session.get('stackexchange_code', None):
     #     se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
     #                                                            'redirect_uri': redirect_uri})
@@ -63,9 +69,15 @@ def home():
     #                                       'key': conf.STACKEXCHANGE_KEY}).json()
     #
     #     print(about_me)
-    data = {'wakatime': try_get_wakatime_data()}
     parse_github()
-    return render_template('home.html', **data)
+    data = {'wakatime': try_get_wakatime_data()}
+    return render_template('resume.html', **data)
+
+
+@app.route('/wakatime-oauth-start')
+def wakatime_oauth_start():
+    url = wakatime.get_authorize_url()
+    return redirect(url)
 
 
 @app.route('/wakatime-oauth-end')
@@ -75,9 +87,9 @@ def wakatime_oauth_end():
     return redirect('/')
 
 
-@app.route('/wakatime-oauth-start')
-def wakatime_oauth_start():
-    url = wakatime.get_authorize_url()
+@app.route('/start-stackexchange')
+def start_stackexchange():
+    url = stackexchange_auth.get_authorize_url(**params)
     return redirect(url)
 
 
@@ -86,20 +98,17 @@ def oauth_stacexchange():
     session['stackexchange_code'] = request.args.get('code')
     return redirect('/')
 
-@app.route('/oauth-github')
-def oauth_github():
-    session['github_code'] = request.args.get('code')
-    return redirect('/')
-
-@app.route('/start-stackexchange')
-def start_stackexchange():
-    url = stackexchange_auth.get_authorize_url(**params)
-    return redirect(url)
 
 @app.route('/start-github')
 def start_github():
     url = github.get_authorize_url()
     return redirect(url)
+
+
+@app.route('/oauth-github')
+def oauth_github():
+    session['github_code'] = request.args.get('code')
+    return redirect('/')
 
 
 if __name__ == '__main__':
