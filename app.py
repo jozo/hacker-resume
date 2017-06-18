@@ -62,10 +62,12 @@ def parse_github():
 
             all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
 
-    return all_langs
+        return all_langs
+
 
 def generate_github():
     pass
+
 
 @app.route('/')
 def home():

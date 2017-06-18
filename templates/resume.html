@@ -1,40 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="home">
-        <h2>Hacker resume</h2>
+    <div class="row justify-content-md-center">
+        <div class="resume col-md-10">
+            <h2>{ hacker resume }</h2>
 
-        {% if wakatime %}
-            <div>
-            <h3>Wakatime (last year)</h3>
+            <div class="user">
+                <img src="https://avatars2.githubusercontent.com/u/4247916?v=3&s=460" alt="User photo" class="circle">
+                <div class="username">@{{ wakatime['data']['username'] }}</div>
+                <div class="info">
+                    <span class="item">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        Bratislava, Slovakia
+                    </span>
+                    <span class="item">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        fadawar@gmail.com
+                    </span>
+                    <span class="item">
+                        <i class="fa fa-link" aria-hidden="true"></i>
+                        <a href="https://github.com/fadawar">https://github.com/fadawar</a>
+                    </span>
+                </div>
+            </div>
+
+
+
+            {% if wakatime %}
                 <div>
-                    <b>Most used languages: </b>
+                    <h3>Wakatime (last year)</h3>
+                    <div>
+                        <b>Most used languages: </b>
 
-                    <span class="badge badge-primary">
+                        <span class="badge badge-primary">
                         {{ wakatime['data']['languages'][0]['name'] }}
                         [{{ wakatime['data']['languages'][0]['text'] }}]
                     </span>
-                    <span class="badge badge-success">
+                        <span class="badge badge-success">
                         {{ wakatime['data']['languages'][1]['name'] }}
                         [{{ wakatime['data']['languages'][1]['text'] }}]
                     </span>
-                </div>
-                <div>
-                    <b>Editor of choice: </b>
+                    </div>
+                    <div>
+                        <b>Editor of choice: </b>
 
-                    <span class="badge badge-primary">
+                        <span class="badge badge-primary">
                         {{ wakatime['data']['editors'][0]['name'] }}
                     </span>
-                </div>
-                <div>
-                    <b>Total time programming: </b>
+                    </div>
+                    <div>
+                        <b>Total time programming: </b>
 
-                    <span class="badge badge-primary">
+                        <span class="badge badge-primary">
                         {{ wakatime['data']['human_readable_total'] }}
                     </span>
+                    </div>
+
                 </div>
-
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
-
 {% endblock %}
