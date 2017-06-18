@@ -124,18 +124,22 @@
 
             <div class="languages">
                 <h3>Expertise</h3>
-                {% for language in wakatime['data']['languages'][:5] %}
+                {% for language in github_sorted_langs[:5] %}
                     <div class="lang">
                         <h4>
                             {{ language['name'] }}
                             <span class="badge badge-warning" title="Total time spend programming in this language">
-                                {{ wakatime['data']['languages'][loop.index]['text'] }}
+                                {{ language['wakatime_hours'] }}
                             </span>
                         </h4>
 
+
+
                         <div class="repos">
-                            <div class="repo">
-                                <h5>Repo name</h5>
+
+                            {% for repo in github_repos_per_lang[language['name']] %}
+                        <div class="repo">
+                                <h5>{{ repo }}</h5>
                                 <span class="item">
                                     <i class="fa fa-hashtag" aria-hidden="true"></i>
                                     12 commits
@@ -149,6 +153,9 @@
                                     <span class="link">https://github.com/fadawar</span>
                                 </span>
                             </div>
+                        {% endfor %}
+
+
                             <div class="repo">
                                 <h5>Repo name</h5>
                                 <span class="item">

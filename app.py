@@ -68,16 +68,17 @@ def parse_stackexchange():
                 'reputation_change': reputation['items']}
     return None
 
+
 def join_wakatime_github_langs(github_data, wakatime_data):
     github_langs = [(l.lower().replace(' ','-'),c) for l,c in github_data['language_sumary'].items()]
     github_od = OrderedDict(sorted(github_langs, key=lambda t: t[1], reverse=True))
 
-    wakatime_langs = [(l['name'].lower().replace(' ','-'), l['hours']) for l in wakatime_data['data']['languages']]
+    wakatime_langs = [(l['name'].lower().replace(' ','-'), l['text']) for l in wakatime_data['data']['languages']]
     wakatime_od = OrderedDict(sorted(wakatime_langs, key=lambda t: t[1], reverse=True))
 
     final_set = []
-    for (name, count) in github_od.items():
-        final_set.append({'name': name, 'github_count': count, 'wakatime_hours': wakatime_od.get(name,0)})
+    for (name, count) in wakatime_od.items():
+        final_set.append({'name': name, 'github_count': github_od.get(name, 0), 'wakatime_hours': count})
 
     return final_set
 
@@ -109,8 +110,8 @@ def parse_github():
         return {'language_summary': language_summary, 'repo_summary': repo_summary}
     return None
 
-def repos_for_langs(data, langs):
 
+def repos_for_langs(data, langs):
     repo_langs_sum = {}
     for l in langs:
         repo_langs_sum[l] = []
@@ -141,6 +142,8 @@ def resume():
             'github': parse_github()}
     sorted_langs = join_wakatime_github_langs(data['github'], data['wakatime'])
     repos_per_lang = repos_for_langs(data['github'], set(map(lambda a: a['name'], sorted_langs[:5])))
+    data['github_sorted_langs'] = sorted_langs
+    data['github_repos_per_lang'] = repos_per_lang
     print(data)
     return render_template('resume.html', **data)
 
