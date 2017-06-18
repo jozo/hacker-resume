@@ -23,6 +23,32 @@
                 </div>
             </div>
 
+            {% if wakatime %}
+            <div class="wakatime-stats">
+                <div>
+                    <b>Editor of choice: </b>
+
+                    <span class="badge badge-primary">
+                    {{ wakatime['data']['editors'][0]['name'] }}
+                </span>
+                </div>
+                <div>
+                    <b>Total time programming: </b>
+
+                    <span class="badge badge-primary">
+                    {{ wakatime['data']['human_readable_total'] }}
+                </span>
+                <div>
+                    <b>Favorite OS: </b>
+
+                    <span class="badge badge-primary">
+                    {{ wakatime['data']['operating_systems'][0]['name'] }}
+                </span>
+                </div>
+
+            </div>
+            {% endif %}
+
             <div id="reputation" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
             <script>
@@ -77,25 +103,22 @@
             </script>
 
 
-            {% if wakatime %}
-                <div class="wakatime-stats">
-                    <div>
-                        <b>Editor of choice: </b>
-
-                        <span class="badge badge-primary">
-                        {{ wakatime['data']['editors'][0]['name'] }}
-                    </span>
-                    </div>
-                    <div>
-                        <b>Total time programming: </b>
-
-                        <span class="badge badge-primary">
-                        {{ wakatime['data']['human_readable_total'] }}
-                    </span>
-                    </div>
-
+            <div class="tags">
+                <div>
+                    <b>StackOverflow tags</b>
                 </div>
-            {% endif %}
+                {% for foo in [a, b, c, d, e, f] %}
+                    <span class="se-tag">
+                        <a href="#" class="name">meno-tagu</a>
+                        <span class="badge badge-default answers" title="# of comments">
+                            [<i class="fa fa-comments" aria-hidden="true"></i> 50]
+                        </span>
+                        <span class="badge badge-default reputation" title="# of reputation gain">
+                            [<i class="fa fa-certificate" aria-hidden="true"></i> 120]
+                        </span>
+                    </span>
+                {% endfor %}
+            </div>
 
             <div class="languages">
                 <h3>Expertise</h3>
@@ -139,23 +162,6 @@
                                     <span class="link">https://github.com/fadawar</span>
                                 </span>
                             </div>
-                        </div>
-
-                        <div class="tags">
-                            <div>
-                                <b>StackOverflow tags</b>
-                            </div>
-                            {% for foo in [a, b, c, d, e, f] %}
-                                <span class="se-tag">
-                                    <a href="#" class="name">meno-tagu</a>
-                                    <span class="badge badge-default answers" title="# of comments">
-                                        [<i class="fa fa-comments" aria-hidden="true"></i> 50]
-                                    </span>
-                                    <span class="badge badge-default reputation" title="# of reputation gain">
-                                        [<i class="fa fa-certificate" aria-hidden="true"></i> 120]
-                                    </span>
-                                </span>
-                            {% endfor %}
                         </div>
                     </div>
                 {% endfor %}

@@ -68,7 +68,9 @@ nav {
     margin-left: 15px;
 }
 
-.lang .tags {
+.tags {
+    margin-top: 30px;
+    text-align: center;
     margin-left: 15px;
 }
 
