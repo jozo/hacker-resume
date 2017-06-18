@@ -54,18 +54,23 @@ def parse_github():
         user = about_me['login']
         repos = github_session.get('https://api.github.com/users/%s/repos' % user,
                                       params={'access_token': github_session.access_token}).json()
-        all_langs = {}
+
+        language_sumary = {}
+        repo_sumary = {}
+
         for repo in repos:
-            name = repo['name']
-            repo_langs = github_session.get('https://api.github.com/repos/%s/%s/languages' % (user,name),
+            repo_name = repo['name']
+            repo_langs = github_session.get('https://api.github.com/repos/%s/%s/languages' % (user,repo_name),
                                        params={'access_token': github_session.access_token}).json()
 
-            all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
+            repo_commits = github_session.get('https://api.github.com/repos/%s/%s/commits' % (user, repo_name),
+                                            params={'author': user,'access_token': github_session.access_token}).json()
 
-    return all_langs
+            repo_sumary['name'] = {'number_commits': len(repo_commits), 'languages':repo_langs}
+            language_sumary = {k: language_sumary.get(k, 0) + repo_langs.get(k, 0) for k in set(language_sumary) | set(repo_langs)}
 
-def generate_github():
-    pass
+    return {'language_sumary': language_sumary, 'repo_sumary': repos}
+
 
 @app.route('/')
 def home():
