@@ -5,6 +5,7 @@ import conf
 import mock
 import requests
 from datetime import datetime
+from collections import OrderedDict
 
 
 app = Flask(__name__)
@@ -67,6 +68,19 @@ def parse_stackexchange():
                 'reputation_change': reputation['items']}
     return None
 
+def join_wakatime_github_langs(github_data, wakatime_data):
+    github_langs = [(l.lower().replace(' ','-'),c) for l,c in github_data['language_sumary'].items()]
+    github_od = OrderedDict(sorted(github_langs, key=lambda t: t[1], reverse=True))
+
+    wakatime_langs = [(l['name'].lower().replace(' ','-'), l['hours']) for l in wakatime_data['data']['languages']]
+    wakatime_od = OrderedDict(sorted(wakatime_langs, key=lambda t: t[1], reverse=True))
+
+    final_set = []
+    for (name, count) in github_od.items():
+        final_set.append({'name': name, 'github_count': count, 'wakatime_hours': wakatime_od.get(name,0)})
+
+    return final_set
+
 
 def parse_github():
     if conf.GITHUB_MOCK:
@@ -95,6 +109,19 @@ def parse_github():
         return {'language_summary': language_summary, 'repo_summary': repo_summary}
     return None
 
+def repos_for_langs(data, langs):
+
+    repo_langs_sum = {}
+    for l in langs:
+        repo_langs_sum[l] = []
+    for d in data['repo_sumary']:
+        repo_langs = set(map(lambda a: a.lower().replace(' ','-') ,data['repo_sumary'][d]['languages'].keys()))
+        intersect = repo_langs.intersection(langs)
+        if intersect:
+            for lang in intersect:
+                repo_langs_sum[lang].append(d)
+
+    return repo_langs_sum
 
 
 @app.route('/')
@@ -112,6 +139,8 @@ def resume():
     data = {'wakatime': try_get_wakatime_data(),
             'stackoverflow': parse_stackexchange(),
             'github': parse_github()}
+    sorted_langs = join_wakatime_github_langs(data['github'], data['wakatime'])
+    repos_per_lang = repos_for_langs(data['github'], set(map(lambda a: a['name'], sorted_langs[:5])))
     print(data)
     return render_template('resume.html', **data)
 
