@@ -69,7 +69,7 @@ def parse_stackexchange():
 
 def parse_github():
     if conf.GITHUB_MOCK:
-        raise NotImplementedError
+        return mock.GITHUB_STATS
     if session.get('github_access_token', None):
         about_me = requests.get('https://api.github.com/user',
                                       params={'access_token': session['github_access_token']}).json()
