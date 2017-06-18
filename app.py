@@ -46,27 +46,6 @@ def try_get_wakatime_data():
     return None
 
 
-def parse_github():
-    if conf.GITHUB_MOCK:
-        raise NotImplementedError
-    if session.get('github_access_token', None):
-        about_me = requests.get('https://api.github.com/user',
-                                      params={'access_token': session['github_access_token']}).json()
-        # print("Github:", about_me)
-        user = about_me['login']
-        repos = requests.get('https://api.github.com/users/%s/repos' % user,
-                                      params={'access_token': session['github_access_token']}).json()
-        all_langs = {}
-        for repo in repos:
-            name = repo['name']
-            repo_langs = requests.get('https://api.github.com/repos/%s/%s/languages' % (user,name),
-                                       params={'access_token': session['github_access_token']}).json()
-
-            all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
-        return all_langs
-    return None
-
-
 def parse_stackexchange():
     if conf.STACKEXCHANGE_MOCK:
         return {'about': mock.STACKEXCHANGE_ABOUT_ME['items'],
@@ -87,15 +66,41 @@ def parse_stackexchange():
                 'reputation_change': reputation['items']}
     return None
 
-def generate_github():
-    pass
+def parse_github():
+    if conf.GITHUB_MOCK:
+        raise NotImplementedError
+    if session.get('github_access_token', None):
+        about_me = requests.get('https://api.github.com/user',
+                                      params={'access_token': session['github_access_token']}).json()
+        user = about_me['login']
+        repos = requests.get('https://api.github.com/users/%s/repos' % user,
+                                      params={'access_token': session['github_access_token']}).json()
+        language_summary = {}
+        repo_summary = {}
+
+        for repo in repos:
+            repo_name = repo['name']
+            repo_langs = requests.get('https://api.github.com/repos/%s/%s/languages' % (user, repo_name),
+                                            params={'access_token': session['github_access_token']}).json()
+
+            repo_commits = requests.get('https://api.github.com/repos/%s/%s/commits' % (user, repo_name),
+                                              params={'author': user, 'access_token': session['github_access_token']}).json()
+
+            repo_summary[repo_name] = {'number_commits': len(repo_commits), 'languages': repo_langs}
+            language_summary = {k: language_summary.get(k, 0) + repo_langs.get(k, 0) for k in
+                               set(language_summary) | set(repo_langs)}
+
+
+        return {'language_summary': language_summary, 'repo_summary': repo_summary}
+    return None
+
 
 @app.route('/')
 def home():
     data = {
         'connected_wakatime': session.get('wakatime_code', False),
         'connected_stackexchange': session.get('stackexchange_code', False),
-        'connected_github': session.get('github_code', False),
+        'connected_github': session.get('github_access_token', False),
     }
     return render_template('home.html', **data)
 
