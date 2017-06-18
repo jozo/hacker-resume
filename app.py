@@ -69,7 +69,7 @@ def parse_github():
             repo_sumary['name'] = {'number_commits': len(repo_commits), 'languages':repo_langs}
             language_sumary = {k: language_sumary.get(k, 0) + repo_langs.get(k, 0) for k in set(language_sumary) | set(repo_langs)}
 
-    return {'language_sumary': language_sumary, 'repo_sumary': repos}
+    return {'language_sumary': language_sumary, 'repo_sumary': repo_sumary}
 
 
 @app.route('/')
