@@ -305,7 +305,7 @@ STACKEXCHANGE_REPUTATION = {'items': [
      'post_id': 39387133, 'user_id': 2591068},
     {'on_date': 1390947912, 'reputation_change': 15, 'vote_type': 'accepts', 'post_type': 'answer', 'post_id': 21415951,
      'user_id': 2591068}], 'has_more': False, 'quota_max': 10000, 'quota_remaining': 9983}
-GITHUB_STATS = {'repo_sumary': {
+GITHUB_STATS = {'repo_summary': {
   'pmc-app8-financial-graph': {'languages': {'Jupyter Notebook': 3183, 'Python': 1832, 'CSS': 1241, 'HTML': 102787},
                                'number_commits': 2},
   'NegNeg': {'languages': {'Jupyter Notebook': 619362, 'Python': 40904, 'HTML': 3715}, 'number_commits': 27},
@@ -343,7 +343,7 @@ GITHUB_STATS = {'repo_sumary': {
   'pmc-app6-webcam-motion-detector': {'languages': {'Python': 1633}, 'number_commits': 2},
   'slovak-dictionary-for-jetbrains-products': {'languages': {}, 'number_commits': 2},
   'SLH-course-materials': {'languages': {'Shell': 460, 'XSLT': 13984, 'Makefile': 1064}, 'number_commits': 16}},
-                'language_sumary': {'Jupyter Notebook': 1128680, 'ApacheConf': 8425, 'JavaScript': 1022292,
+                'language_summary': {'Jupyter Notebook': 1128680, 'ApacheConf': 8425, 'JavaScript': 1022292,
                                     'Shell': 51676, 'Visual Basic': 2202, 'CSS': 581807, 'HTML': 13190594,
                                     'PHP': 29311003, 'C++': 50616, 'XSLT': 13984, 'GCC Machine Description': 51,
                                     'Makefile': 3323, 'QML': 4343, 'TeX': 8826, 'TypeScript': 10818, 'Python': 136663,
