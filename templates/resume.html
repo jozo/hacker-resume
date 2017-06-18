@@ -23,6 +23,58 @@
                 </div>
             </div>
 
+            <div id="reputation" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+            <script>
+                var reputation =  JSON.parse('{{ stackoverflow['reputation'] | tojson }}');
+                reputation_data = [];
+                for(var i=0; i < reputation.length; i++){
+                    reputation_data.push([new Date(reputation[i]['on_date'])*1000, reputation[i]['reputation_change']]);
+                }
+
+                Highcharts.chart('reputation', {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Stackoverflow reputation'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { 
+                        month: '%b \'%y',
+                        year: '%Y'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Reputation points'
+                    }
+                },
+                tooltip: {
+                    pointFormat: '{point.y: .0f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: 'Reputation',
+                    data: reputation_data
+                }]
+            });
+            </script>
 
 
             {% if wakatime %}

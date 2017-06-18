@@ -4,6 +4,7 @@ import wakatime
 import conf
 import mock
 import requests
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -50,7 +51,7 @@ def parse_stackexchange():
     if conf.STACKEXCHANGE_MOCK:
         return {'about': mock.STACKEXCHANGE_ABOUT_ME['items'],
                 'tags': mock.STACKEXCHANGE_TOP_TAGS['items'],
-                'reputation_change': mock.STACKEXCHANGE_REPUTATION['items']}
+                'reputation': mock.STACKEXCHANGE_REPUTATION['items']}
     if session.get('stackexchange_code', None):
         se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
                                                                'redirect_uri': redirect_uri,
@@ -95,6 +96,12 @@ def parse_github():
     return None
 
 
+# def reputation_change(reputation):
+#     [(datetime.fromtimestamp(chage)) for change in reputation]
+
+
+
+
 @app.route('/')
 def home():
     data = {
@@ -110,6 +117,7 @@ def resume():
     data = {'wakatime': try_get_wakatime_data(),
             'stackoverflow': parse_stackexchange(),
             'github': parse_github()}
+    #data['reputation'] = reputation_change(data['stackoverflow']['reputation_change'])
     print(data)
     return render_template('resume.html', **data)
 
