@@ -96,11 +96,6 @@ def parse_github():
     return None
 
 
-# def reputation_change(reputation):
-#     [(datetime.fromtimestamp(chage)) for change in reputation]
-
-
-
 
 @app.route('/')
 def home():
@@ -117,7 +112,6 @@ def resume():
     data = {'wakatime': try_get_wakatime_data(),
             'stackoverflow': parse_stackexchange(),
             'github': parse_github()}
-    #data['reputation'] = reputation_change(data['stackoverflow']['reputation_change'])
     print(data)
     return render_template('resume.html', **data)
 

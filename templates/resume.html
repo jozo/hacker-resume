@@ -145,14 +145,14 @@
                             <div>
                                 <b>StackOverflow tags</b>
                             </div>
-                            {% for foo in [a, b, c, d, e, f] %}
+                            {% for tag in stackoverflow['tags'] %}
                                 <span class="se-tag">
-                                    <a href="#" class="name">meno-tagu</a>
-                                    <span class="badge badge-default answers" title="# of comments">
-                                        [<i class="fa fa-comments" aria-hidden="true"></i> 50]
+                                    <a href="#" class="name">{{ tag['tag_name'] }}</a>
+                                    <span class="badge badge-default answers" title="# of answers">
+                                        [<i class="fa fa-comments" aria-hidden="true"></i> {{ tag['answer_count']}}]
                                     </span>
                                     <span class="badge badge-default reputation" title="# of reputation gain">
-                                        [<i class="fa fa-certificate" aria-hidden="true"></i> 120]
+                                        [<i class="fa fa-certificate" aria-hidden="true"></i> {{ tag['answer_score'] }}]
                                     </span>
                                 </span>
                             {% endfor %}
