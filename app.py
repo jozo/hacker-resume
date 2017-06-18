@@ -73,12 +73,12 @@ def join_wakatime_github_langs(github_data, wakatime_data):
     github_langs = [(l.lower().replace(' ','-'),c) for l,c in github_data['language_sumary'].items()]
     github_od = OrderedDict(sorted(github_langs, key=lambda t: t[1], reverse=True))
 
-    wakatime_langs = [(l['name'].lower().replace(' ','-'), l['hours']) for l in wakatime_data['data']['languages']]
+    wakatime_langs = [((l['name'].lower().replace(' ','-'), l['text']), l['hours']) for l in wakatime_data['data']['languages']]
     wakatime_od = OrderedDict(sorted(wakatime_langs, key=lambda t: t[1], reverse=True))
 
     final_set = []
-    for (name, count) in wakatime_od.items():
-        final_set.append({'name': name, 'github_count': github_od.get(name,0), 'wakatime_hours': count})
+    for (name_text, count) in wakatime_od.items():
+        final_set.append({'name': name_text[0], 'github_count': github_od.get(name_text[0],0), 'wakatime_hours': name_text[1]})
 
     return final_set
 
