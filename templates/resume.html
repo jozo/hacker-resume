@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row justify-content-md-center">
-        <div class="resume col-md-10">
+        <div class="resume col-md-9">
             <h2>{ hacker resume }</h2>
 
             <div class="user">
@@ -38,6 +38,7 @@
                     <span class="badge badge-primary">
                     {{ wakatime['data']['human_readable_total'] }}
                 </span>
+                </div>
                 <div>
                     <b>Favorite OS: </b>
 
@@ -107,14 +108,14 @@
                 <div>
                     <b>StackOverflow tags</b>
                 </div>
-                {% for foo in [a, b, c, d, e, f] %}
+                {% for tag in stackoverflow['tags'] %}
                     <span class="se-tag">
-                        <a href="#" class="name">meno-tagu</a>
+                        <a href="#" class="name">{{ tag['tag_name'] }}</a>
                         <span class="badge badge-default answers" title="# of comments">
-                            [<i class="fa fa-comments" aria-hidden="true"></i> 50]
+                            [<i class="fa fa-comments" aria-hidden="true"></i> {{ tag['answer_count']}}]
                         </span>
                         <span class="badge badge-default reputation" title="# of reputation gain">
-                            [<i class="fa fa-certificate" aria-hidden="true"></i> 120]
+                            [<i class="fa fa-certificate" aria-hidden="true"></i> {{ tag['answer_score'] }}]
                         </span>
                     </span>
                 {% endfor %}
