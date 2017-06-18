@@ -57,6 +57,12 @@
 
                 </div>
             {% endif %}
+
+            <div class="languages">
+                {% for language in wakatime['data']['languages'][:5] %}
+                    <h3>{{ language['name'] }}</h3>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
