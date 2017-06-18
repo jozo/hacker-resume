@@ -3,6 +3,7 @@ from rauth import OAuth2Service
 import wakatime
 import conf
 import mock
+import requests
 
 
 app = Flask(__name__)
@@ -45,28 +46,53 @@ def try_get_wakatime_data():
     return None
 
 
+def parse_stackexchange():
+    if conf.STACKEXCHANGE_MOCK:
+        return {'about': mock.STACKEXCHANGE_ABOUT_ME['items'],
+                'tags': mock.STACKEXCHANGE_TOP_TAGS['items'],
+                'reputation_change': mock.STACKEXCHANGE_REPUTATION['items']}
+    if session.get('stackexchange_code', None):
+        se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
+                                                               'redirect_uri': redirect_uri,
+                                                               'expires': 10000})
+        se_params = {'format': 'json', 'site': 'stackoverflow',
+                  'access_token': se_session.access_token,
+                  'key': conf.STACKEXCHANGE_KEY}
+        tags = se_session.get('https://api.stackexchange.com/me/top-tags', params=se_params).json()
+        about_me = se_session.get('https://api.stackexchange.com/me', params=se_params).json()
+        reputation = se_session.get('https://api.stackexchange.com/me/reputation', params=se_params).json()
+        return {'about': about_me['items'],
+                'tags': tags['items'],
+                'reputation_change': reputation['items']}
+    return None
+
 def parse_github():
-    if session.get('github_code', None):
-        github_session = github.get_auth_session(data={'code': session['github_code']})
-        about_me = github_session.get('https://api.github.com/user',
-                                      params={'access_token': github_session.access_token}).json()
-        # print("Github:", about_me)
+    if conf.GITHUB_MOCK:
+        raise NotImplementedError
+    if session.get('github_access_token', None):
+        about_me = requests.get('https://api.github.com/user',
+                                      params={'access_token': session['github_access_token']}).json()
         user = about_me['login']
-        repos = github_session.get('https://api.github.com/users/%s/repos' % user,
-                                      params={'access_token': github_session.access_token}).json()
-        all_langs = {}
+        repos = requests.get('https://api.github.com/users/%s/repos' % user,
+                                      params={'access_token': session['github_access_token']}).json()
+        language_summary = {}
+        repo_summary = {}
+
         for repo in repos:
-            name = repo['name']
-            repo_langs = github_session.get('https://api.github.com/repos/%s/%s/languages' % (user,name),
-                                       params={'access_token': github_session.access_token}).json()
+            repo_name = repo['name']
+            repo_langs = requests.get('https://api.github.com/repos/%s/%s/languages' % (user, repo_name),
+                                            params={'access_token': session['github_access_token']}).json()
 
-            all_langs = {k: all_langs.get(k, 0) + repo_langs.get(k, 0) for k in set(all_langs) | set(repo_langs)}
+            repo_commits = requests.get('https://api.github.com/repos/%s/%s/commits' % (user, repo_name),
+                                              params={'author': user, 'access_token': session['github_access_token']}).json()
 
-        return all_langs
+            repo_summary[repo_name] = {'number_commits': len(repo_commits), 'languages': repo_langs}
+            language_summary = {k: language_summary.get(k, 0) + repo_langs.get(k, 0) for k in
+                               set(language_summary) | set(repo_langs)}
 
 
-def generate_github():
-    pass
+        return {'language_summary': language_summary, 'repo_summary': repo_summary}
+    return None
 
 
 @app.route('/')
@@ -74,25 +100,17 @@ def home():
     data = {
         'connected_wakatime': session.get('wakatime_code', False),
         'connected_stackexchange': session.get('stackexchange_code', False),
-        'connected_github': session.get('github_code', False),
+        'connected_github': session.get('github_access_token', False),
     }
     return render_template('home.html', **data)
 
 
 @app.route('/resume')
 def resume():
-    # if session.get('stackexchange_code', None):
-    #     se_session = stackexchange_auth.get_auth_session(data={'code': session['stackexchange_code'],
-    #                                                            'redirect_uri': redirect_uri,
-    #                                                            'expires': 1000})
-    #     about_me = se_session.get('https://api.stackexchange.com/me/tags',
-    #                               params={'format': 'json', 'site': 'stackoverflow',
-    #                                       'access_token': se_session.access_token,
-    #                                       'key': conf.STACKEXCHANGE_KEY}).json()
-    #
-    #     print(about_me)
-    # parse_github()
-    data = {'wakatime': try_get_wakatime_data(), 'GitHub': parse_github()}
+    data = {'wakatime': try_get_wakatime_data(),
+            'stackoverflow': parse_stackexchange(),
+            'github': parse_github()}
+    print(data)
     return render_template('resume.html', **data)
 
 
@@ -134,7 +152,8 @@ def start_github():
 
 @app.route('/oauth-github')
 def oauth_github():
-    session['github_code'] = request.args.get('code')
+    github_session = github.get_auth_session(data={'code': request.args.get('code')})
+    session['github_access_token'] = github_session.access_token
     return redirect('/')
 
 
