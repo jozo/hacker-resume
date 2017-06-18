@@ -51,6 +51,7 @@
             {% endif %}
 
             <div id="reputation" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            <div id="languages" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 
             <script>
                 var reputation =  JSON.parse('{{ stackoverflow['reputation'] | tojson }}');
@@ -58,6 +59,14 @@
                 for(var i=0; i < reputation.length; i++){
                     reputation_data.push([new Date(reputation[i]['on_date'])*1000, reputation[i]['reputation_change']]);
                 }
+
+                var languages = JSON.parse('{{ wakatime['data']['languages'] | tojson }}');
+                languages_data = [];
+                for(var i=0; i < languages.length; i++){
+                    languages_data.push({name: languages[i]['name'], y: languages[i]['total_seconds']})
+                }
+                console.log(languages);
+                console.log(languages_data);
 
                 Highcharts.chart('reputation', {
                 chart: {
@@ -99,6 +108,39 @@
                 series: [{
                     name: 'Reputation',
                     data: reputation_data
+                }]
+            });
+
+                Highcharts.chart('languages', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Technologies'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: languages_data
                 }]
             });
             </script>
