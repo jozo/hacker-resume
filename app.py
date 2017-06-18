@@ -65,12 +65,12 @@ def parse_stackexchange():
         reputation = se_session.get('https://api.stackexchange.com/me/reputation', params=se_params).json()
         return {'about': about_me['items'],
                 'tags': tags['items'],
-                'reputation_change': reputation['items']}
+                'reputation': reputation['items']}
     return None
 
 
 def join_wakatime_github_langs(github_data, wakatime_data):
-    github_langs = [(l.lower().replace(' ','-'),c) for l,c in github_data['language_sumary'].items()]
+    github_langs = [(l.lower().replace(' ','-'),c) for l,c in github_data['language_summary'].items()]
     github_od = OrderedDict(sorted(github_langs, key=lambda t: t[1], reverse=True))
 
     wakatime_langs = [((l['name'].lower().replace(' ','-'), l['text']), l['hours']) for l in wakatime_data['data']['languages']]
@@ -115,8 +115,8 @@ def repos_for_langs(data, langs):
     repo_langs_sum = {}
     for l in langs:
         repo_langs_sum[l] = []
-    for d in data['repo_sumary']:
-        repo_langs = set(map(lambda a: a.lower().replace(' ','-') ,data['repo_sumary'][d]['languages'].keys()))
+    for d in data['repo_summary']:
+        repo_langs = set(map(lambda a: a.lower().replace(' ','-') ,data['repo_summary'][d]['languages'].keys()))
         intersect = repo_langs.intersection(langs)
         if intersect:
             for lang in intersect:
