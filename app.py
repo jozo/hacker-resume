@@ -66,6 +66,7 @@ def parse_stackexchange():
                 'reputation_change': reputation['items']}
     return None
 
+
 def parse_github():
     if conf.GITHUB_MOCK:
         raise NotImplementedError
@@ -89,7 +90,6 @@ def parse_github():
             repo_summary[repo_name] = {'number_commits': len(repo_commits), 'languages': repo_langs}
             language_summary = {k: language_summary.get(k, 0) + repo_langs.get(k, 0) for k in
                                set(language_summary) | set(repo_langs)}
-
 
         return {'language_summary': language_summary, 'repo_summary': repo_summary}
     return None
