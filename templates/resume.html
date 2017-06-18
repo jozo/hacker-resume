@@ -26,20 +26,7 @@
 
 
             {% if wakatime %}
-                <div>
-                    <h3>Wakatime (last year)</h3>
-                    <div>
-                        <b>Most used languages: </b>
-
-                        <span class="badge badge-primary">
-                        {{ wakatime['data']['languages'][0]['name'] }}
-                        [{{ wakatime['data']['languages'][0]['text'] }}]
-                    </span>
-                        <span class="badge badge-success">
-                        {{ wakatime['data']['languages'][1]['name'] }}
-                        [{{ wakatime['data']['languages'][1]['text'] }}]
-                    </span>
-                    </div>
+                <div class="wakatime-stats">
                     <div>
                         <b>Editor of choice: </b>
 
@@ -59,8 +46,66 @@
             {% endif %}
 
             <div class="languages">
+                <h3>Expertise</h3>
                 {% for language in wakatime['data']['languages'][:5] %}
-                    <h3>{{ language['name'] }}</h3>
+                    <div class="lang">
+                        <h4>
+                            {{ language['name'] }}
+                            <span class="badge badge-warning" title="Total time spend programming in this language">
+                                {{ wakatime['data']['languages'][loop.index]['text'] }}
+                            </span>
+                        </h4>
+
+                        <div class="repos">
+                            <div class="repo">
+                                <h5>Repo name</h5>
+                                <span class="item">
+                                    <i class="fa fa-hashtag" aria-hidden="true"></i>
+                                    12 commits
+                                </span>
+                                <span class="item">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    9 stars
+                                </span>
+                                <span class="item">
+                                    <i class="fa fa-link" aria-hidden="true"></i>
+                                    <span class="link">https://github.com/fadawar</span>
+                                </span>
+                            </div>
+                            <div class="repo">
+                                <h5>Repo name</h5>
+                                <span class="item">
+                                    <i class="fa fa-hashtag" aria-hidden="true"></i>
+                                    12 commits
+                                </span>
+                                <span class="item">
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    9 stars
+                                </span>
+                                <span class="item">
+                                    <i class="fa fa-link" aria-hidden="true"></i>
+                                    <span class="link">https://github.com/fadawar</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="tags">
+                            <div>
+                                <b>StackOverflow tags</b>
+                            </div>
+                            {% for foo in [a, b, c, d, e, f] %}
+                                <span class="se-tag">
+                                    <a href="#" class="name">meno-tagu</a>
+                                    <span class="badge badge-default answers" title="# of comments">
+                                        [<i class="fa fa-comments" aria-hidden="true"></i> 50]
+                                    </span>
+                                    <span class="badge badge-default reputation" title="# of reputation gain">
+                                        [<i class="fa fa-certificate" aria-hidden="true"></i> 120]
+                                    </span>
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>

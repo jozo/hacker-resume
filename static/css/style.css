@@ -26,6 +26,11 @@ nav {
     margin-bottom: 50px;
 }
 
+.resume h3 {
+    text-align: center;
+    margin-top: 30px;
+}
+
 .user {
     text-align: center;
 }
@@ -47,4 +52,59 @@ nav {
 
 .languages {
     margin: 40px 0;
+}
+
+.lang {
+    padding: 15px;
+}
+
+.lang:hover {
+    background-color: #eeeeee;
+}
+
+.lang h4 .badge {
+    font-weight: normal;
+    font-size: 60%;
+    margin-left: 15px;
+}
+
+.lang .tags {
+    margin-left: 15px;
+}
+
+.se-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #45BFB4;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+
+.se-tag a {
+    color: #385F71;
+}
+
+.repos {
+    margin-left: 15px;
+}
+
+.repos h5 {
+    font-size: 1.15rem;
+    color: #0366d6;
+    margin-bottom: 0;
+}
+
+.repo {
+    margin-bottom: 10px;
+}
+
+.repo .item {
+    font-size: 80%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.wakatime-stats {
+    text-align: center;
 }
